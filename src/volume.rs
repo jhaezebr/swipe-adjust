@@ -17,8 +17,17 @@ pub struct VolumeBackend {
 }
 
 struct PulseClient {
-    mainloop: Mainloop,
+    // `context` MUST be declared (and therefore dropped) before `mainloop`;
+    // dropping `pa_mainloop` while `pa_context` still holds time events triggers
+    // `Assertion '!e->dead' failed` inside libpulse's `mainloop_time_free()`.
     context: Context,
+    mainloop: Mainloop,
+}
+
+impl Drop for PulseClient {
+    fn drop(&mut self) {
+        self.context.disconnect();
+    }
 }
 
 impl VolumeBackend {
@@ -184,19 +193,21 @@ impl PulseClient {
             match mainloop.iterate(true) {
                 IterateResult::Success(_) => {}
                 IterateResult::Quit(_) | IterateResult::Err(_) => {
+                    context.disconnect();
                     return Err("PulseAudio mainloop terminated while connecting".to_string());
                 }
             }
             match context.get_state() {
                 ContextState::Ready => break,
                 ContextState::Failed | ContextState::Terminated => {
+                    context.disconnect();
                     return Err("PulseAudio context failed during handshake".to_string());
                 }
                 _ => {}
             }
         }
 
-        Ok(Self { mainloop, context })
+        Ok(Self { context, mainloop })
     }
 
     fn drain_nonblocking(&mut self) {
