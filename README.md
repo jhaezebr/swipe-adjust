@@ -27,7 +27,7 @@ swipe-adjust auto       # Return to automatic SW_TABLET_MODE tracking
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
     swipe-adjust = {
-      url = "path:/home/jhaezebr/Projects/VibeCoded/swipe-adjust"; # or github:<user>/swipe-adjust
+      url = "github:<your-user>/swipe-adjust";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -47,7 +47,7 @@ swipe-adjust auto       # Return to automatic SW_TABLET_MODE tracking
         # 2. Home Manager module: configures TOML & graphical-session user service
         home-manager.nixosModules.home-manager
         {
-          home-manager.users.jhaezebr = {
+          home-manager.users.<your-user> = {
             imports = [ swipe-adjust.homeManagerModules.default ];
             services.swipe-adjust = {
               enable = true;
