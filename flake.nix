@@ -136,7 +136,18 @@
         in
         {
           package = self.packages.${system}.default;
-          nixos-module = pkgs.writeText "swipe-adjust-udev-check" nixosEval.config.services.udev.extraRules;
+          nixos-module =
+            let
+              matching = builtins.filter
+                (p: (p.name or "") == "swipe-adjust-udev-rules")
+                nixosEval.config.services.udev.packages;
+              rulePkg = builtins.head matching;
+            in
+            pkgs.runCommand "swipe-adjust-udev-check" { } ''
+              test -f "${rulePkg}/etc/udev/rules.d/70-swipe-adjust.rules"
+              grep -q 'TAG+="uaccess"' "${rulePkg}/etc/udev/rules.d/70-swipe-adjust.rules"
+              touch "$out"
+            '';
         });
     };
 }
