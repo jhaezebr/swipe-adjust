@@ -1,5 +1,8 @@
 {
-  "version": "0.1.0",
-  "x86_64-linux": null,
+  "version": "0.1.0-e0c0b7a",
+  "x86_64-linux": {
+    "url": "https://github.com/jhaezebr/swipe-adjust/releases/download/v0.1.0-e0c0b7a/swipe-adjust-x86_64-linux.tar.gz",
+    "hash": "sha256-9C/511u+QK3OB4GVmcRHTqUeq2EU0uOCpxlWmgy/tWE="
+  },
   "aarch64-linux": null
 }
