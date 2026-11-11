@@ -1,0 +1,21 @@
+[package]
+name = "swipe-adjust"
+version = "0.1.0"
+edition = "2021"
+description = "Touchscreen edge-swipe brightness and volume daemon for Wayland tablets/2-in-1s"
+license = "MIT"
+
+[dependencies]
+libc = "0.2"
+libpulse-binding = "2.28"
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+wayland-client = "0.31"
+wayland-protocols = { version = "0.32", features = ["client", "staging", "unstable"] }
+wayland-protocols-wlr = { version = "0.3", features = ["client"] }
+zbus = "5"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
